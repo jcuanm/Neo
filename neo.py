@@ -26,26 +26,29 @@ def sub(m1, m2):
 
 # strassen's algorithm for multiplying two square matrices
 def strassen(m1, m2):
-	new_matrix = []
-	new_row = []
 	rows = len(m1)
+	half = rows / 2
+
 	# base case: 1x1 matrices -> 1x1 matrix
 	if rows == 1:
 		return [[m1[0][0] * m2[0][0]]]
+
 	# create submatrices A through H 
-	a, b, c, d, e, f, g, h = [[[ None for y in range(rows/2) ] \
-				for x in range(rows/2)] for i in range(8)]
+	a, b, c, d, e, f, g, h = [[[ None for y in range(half) ] \
+				for x in range(half)] for i in range(8)]
+
 	# get submatrices A through H recursively
-	for i in range(rows/2):
-		for j in range(rows/2):
+	for i in range(half):
+		for j in range(half):
 			a[i][j] = m1[i][j]
-			b[i][j] = m1[i][j+rows/2]
-			c[i][j] = m1[i+rows/2][j]
-			d[i][j] = m1[i+rows/2][j+rows/2]
+			b[i][j] = m1[i][j + half]
+			c[i][j] = m1[i + half][j]
+			d[i][j] = m1[i + half][j + half]
 			e[i][j] = m2[i][j]
-			f[i][j] = m2[i][j+rows/2]
-			g[i][j] = m2[i+rows/2][j]
-			h[i][j] = m2[i+rows/2][j+rows/2]
+			f[i][j] = m2[i][j + half]
+			g[i][j] = m2[i + half][j]
+			h[i][j] = m2[i + half][j + half]
+
 	# calculate p1 through p7
 	p1 = strassen(a, sub(f, h))
 	p2 = strassen(add(a, b), h)
@@ -62,14 +65,14 @@ def strassen(m1, m2):
 	bottomright = add(p5, sub(p1, add(p3, p7)))
 	for i in range(rows):
 		for j in range(rows):
-			if i < rows/2 and j < rows/2:
+			if i < half and j < half:
 				m1[i][j] = topleft[i][j]
-			elif i < rows/2:
-				m1[i][j] = topright[i][j - rows/2]
+			elif i < half:
+				m1[i][j] = topright[i][j - half]
 			elif j < rows/2:
-				m1[i][j] = bottomleft[i - rows/2][j]
+				m1[i][j] = bottomleft[i - half][j]
 			else:
-				m1[i][j] = bottomright[i - rows/2][j - rows/2]
+				m1[i][j] = bottomright[i - half][j - half]
 	return m1
 
 # typical way of multiplying two square matrices
