@@ -1,13 +1,13 @@
 import sys
 import random
 
-#prints a matrix in the traditional form
+# print a matrix in the traditional form
 def print_matrix(m):
 	for row in m:
 		print(row)
 	return m
 
-# generate random matrix w/ dimension d
+# generate random matrix with dimension d
 def gen(d):
 	new = [[ None for y in range(d) ] for x in range(d)] 
 	for i in range(d):
@@ -104,7 +104,7 @@ def typical(m1, m2):
 
 	return new_matrix
 
-# testing for various functions
+# tests for various functions
 def testing():
 	# test add
 	assert (add([[1]],[[4]]) == [[5]]), "add, 1x1"
