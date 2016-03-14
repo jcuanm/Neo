@@ -1,4 +1,5 @@
 import sys
+import random
 
 #prints a matrix in the traditional form
 def print_matrix(m):
@@ -6,7 +7,13 @@ def print_matrix(m):
 		print(row)
 	return m
 
-#TODO: function that generates random matrix with the specified dimensions
+# generate random matrix w/ dimension d
+def gen(d):
+	new = [[ None for y in range(d) ] for x in range(d)] 
+	for i in range(d):
+		for j in range(d):
+			new[i][j] = random.randint(1, 10)
+	return new
 
 # add one square matrix to another
 def add(m1, m2):
