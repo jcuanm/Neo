@@ -10,17 +10,19 @@ def print_matrix(m):
 
 # add one square matrix to another
 def add(m1, m2):
+	new = [[ None for y in range(len(m1)) ] for x in range(len(m1))] 
 	for i in range(len(m1)):
 		for j in range(len(m1)):
-			m1[i][j] = m1[i][j] + m2[i][j]
-	return m1
+			new[i][j] = m1[i][j] + m2[i][j]
+	return new
 
 # subtract one square matrix from another
 def sub(m1, m2):
+	new = [[ None for y in range(len(m1)) ] for x in range(len(m1))] 
 	for i in range(len(m1)):
 		for j in range(len(m1)):
-			m1[i][j] = m1[i][j] - m2[i][j]
-	return m1
+			new[i][j] = m1[i][j] - m2[i][j]
+	return new
 
 # strassen's algorithm for multiplying two square matrices
 def strassen(m1, m2):
@@ -34,7 +36,6 @@ def strassen(m1, m2):
 	a, b, c, d, e, f, g, h = [[[ None for y in range(rows/2) ] \
 				for x in range(rows/2)] for i in range(8)]
 	# get submatrices A through H recursively
-	# TODO: figure out how to do this ~in place~
 	for i in range(rows/2):
 		for j in range(rows/2):
 			a[i][j] = m1[i][j]
@@ -53,10 +54,9 @@ def strassen(m1, m2):
 	p5 = strassen(add(a, d), add(e, h))
 	p6 = strassen(sub(b, d), add(g, h))
 	p7 = strassen(sub(a, c), add(e, f))
+
 	# reconstruct matrix
-	# TODO: figure out how to do this ~in place~
 	topleft = add(p5, add(p4, sub(p6, p2)))
-	print_matrix(topleft)
 	topright = add(p1, p2)
 	bottomleft = add(p3, p4)
 	bottomright = add(p5, sub(p1, add(p3, p7)))
@@ -111,6 +111,13 @@ def testing():
 	assert (typical([[1,2,3], [4,5,6], [7,8,9]], [[1,2,3], [4,5,6], \
 			[7,8,9]]) == [[30,36,42],[66,81,96],[102,126,150]]), "typ, 3x3"
 
+	# test strassens
+	assert (strassen([[3]],[[4]]) == [[12]]), "typ, 1x1"
+	assert (strassen([[1,2],[3,4]],[[1,2],[3,4]]) == [[7,10],[15,22]]), \
+			"typ, 2x2"
+	# assert (strassen([[1,2,3], [4,5,6], [7,8,9]], [[1,2,3], [4,5,6], \
+	#		[7,8,9]]) == [[30,36,42],[66,81,96],[102,126,150]]), "typ, 3x3"
+
 def main():
 	#args is a list of the arguments passed at command line
 	args = sys.argv
@@ -119,7 +126,7 @@ def main():
 
 	# run tests
 	testing()
-	
+
 	# try multiplying two 2x2 matrices w/ strassen's
 	print_matrix(strassen([[1,2],[3,4]],[[1,2],[3,4]]))
 	return 1
