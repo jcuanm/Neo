@@ -10,7 +10,7 @@ def print_full(m):
 # print just the diagonals of a matrix
 def print_matrix(m):
 	for i in range(len(m)):
-		print m[i][i] + "\n"
+		print str(m[i][i])
 	return m
 
 # generate random matrix with dimension d
@@ -110,6 +110,10 @@ def typical(m1, m2):
 
 	return new_matrix
 
+# multiply two square matrices
+def mult(m1, m2):
+	return typical(m1, m2)
+
 # tests for various functions
 def testing():
 	# test add
@@ -134,12 +138,19 @@ def testing():
 	# assert (strassen([[1,2,3], [4,5,6], [7,8,9]], [[1,2,3], [4,5,6], \
 	#		[7,8,9]]) == [[30,36,42],[66,81,96],[102,126,150]]), "typ, 3x3"
 
+	# try multiplying two 2x2 matrices w/ strassen's
+	print_full(strassen([[1,2],[3,4]],[[1,2],[3,4]]))
+
 def main():
 	# get command-line arguments
 	args = sys.argv
-	flag = args[1]
+	flag = int(args[1])
 	dimension = int(args[2])
 	inputfile = args[3]
+
+	# if in testing mode, run tests
+	if flag == 1:
+		testing()
 
 	# open file
 	f = open(inputfile, "r")
@@ -160,11 +171,9 @@ def main():
 	# close file
 	f.close()
 
-	# run tests
-	testing()
+	# print result of multiplication
+	print_matrix(mult(m1,m2))
 
-	# try multiplying two 2x2 matrices w/ strassen's
-	print_full(strassen([[1,2],[3,4]],[[1,2],[3,4]]))
 	return 1
 
 if __name__ == '__main__':
