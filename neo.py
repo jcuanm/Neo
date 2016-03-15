@@ -18,7 +18,7 @@ def gen(d):
 	new = [[ None for y in range(d) ] for x in range(d)] 
 	for i in range(d):
 		for j in range(d):
-			new[i][j] = random.randint(1, 10)
+			new[i][j] = random.randint(0, 2)
 	return new
 
 # add one square matrix to another
@@ -135,11 +135,30 @@ def testing():
 	#		[7,8,9]]) == [[30,36,42],[66,81,96],[102,126,150]]), "typ, 3x3"
 
 def main():
-	#args is a list of the arguments passed at command line
+	# get command-line arguments
 	args = sys.argv
 	flag = args[1]
-	dimension = args[2]
+	dimension = int(args[2])
 	inputfile = args[3]
+
+	# open file
+	f = open(inputfile, "r")
+
+	# initialize matrices
+	m1, m2 = [[[ None for y in range(dimension) ] \
+			for x in range(dimension)] for i in range(2)]
+
+	# fill first matrix
+	for i in range(dimension):
+		for j in range(dimension):
+			m1[i][j] = int(f.readline())
+	# fill second matrix
+	for i in range(dimension):
+		for j in range(dimension):
+			m2[i][j] = int(f.readline())
+
+	# close file
+	f.close()
 
 	# run tests
 	testing()
