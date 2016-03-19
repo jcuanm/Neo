@@ -40,6 +40,21 @@ def sub(m1, m2):
 # strassen's algorithm for multiplying two square matrices
 def strassen(m1, m2):
 	rows = len(m1)
+	cols = len(m1[0])
+
+	# increment cols if cols < rows
+	if rows > cols:
+		for i in range(rows):
+			m1[i].append(0)
+			m2[i].append(0)
+		cols += 1
+
+	# increment rows, otherwise
+	if cols > rows:
+		m1.append([0 for i in range(cols)])
+		m2.append([0 for i in range(cols)])
+		rows += 1
+
 	half = rows / 2
 
 	# base case: 1x1 matrices -> 1x1 matrix
@@ -138,9 +153,6 @@ def testing():
 	# assert (strassen([[1,2,3], [4,5,6], [7,8,9]], [[1,2,3], [4,5,6], \
 	#		[7,8,9]]) == [[30,36,42],[66,81,96],[102,126,150]]), "typ, 3x3"
 
-	# try multiplying two 2x2 matrices w/ strassen's
-	print_full(strassen([[1,2],[3,4]],[[1,2],[3,4]]))
-
 def main():
 	# get command-line arguments
 	args = sys.argv
@@ -171,8 +183,13 @@ def main():
 	# close file
 	f.close()
 
+	m1 = gen(5)
+	m2 = gen(5)
+
 	# print result of multiplication
-	print_matrix(mult(m1,m2))
+	print_full(mult(m1,m2))
+	print("HEY")
+	print_full(typical(m1,m2))
 
 	return 1
 
