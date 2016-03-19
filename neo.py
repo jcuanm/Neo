@@ -87,7 +87,7 @@ def strassen(m1, m2):
 	bottomleft = add(p3, p4)
 	bottomright = add(p5, sub(p1, add(p3, p7)))
 
-	new = [[ 333 for y in range(rows) ] for x in range(rows)] 
+	new = [[ None for y in range(rows) ] for x in range(rows)] 
 	for i in range(rows):
 		for j in range(rows):
 			if i < half and j < half:
