@@ -1,5 +1,7 @@
 import sys
 import random
+import time
+import math
 
 # print a matrix in the traditional form
 def print_full(m):
@@ -42,40 +44,33 @@ def strassen(m1, m2):
 	rows = len(m1)
 	cols = len(m1[0])
 
-	# increment cols if cols < rows
-	if rows > cols:
-		for i in range(rows):
-			m1[i].append(0)
-			m2[i].append(0)
-		cols += 1
-
-	# increment rows, otherwise
-	if cols > rows:
-		m1.append([0 for i in range(cols)])
-		m2.append([0 for i in range(cols)])
-		rows += 1
-
-	half = rows / 2
+	half = int(math.ceil(float(max(rows,cols)) / 2))
 
 	# base case: 1x1 matrices -> 1x1 matrix
 	if rows == 1:
 		return [[m1[0][0] * m2[0][0]]]
 
 	# create submatrices A through H 
-	a, b, c, d, e, f, g, h = [[[ None for y in range(half) ] \
+	a, b, c, d, e, f, g, h = [[[ 0 for y in range(half) ] \
 				for x in range(half)] for i in range(8)]
 
 	# get submatrices A through H recursively
 	for i in range(half):
 		for j in range(half):
 			a[i][j] = m1[i][j]
-			b[i][j] = m1[i][j + half]
-			c[i][j] = m1[i + half][j]
-			d[i][j] = m1[i + half][j + half]
 			e[i][j] = m2[i][j]
-			f[i][j] = m2[i][j + half]
-			g[i][j] = m2[i + half][j]
-			h[i][j] = m2[i + half][j + half]
+
+			if j != rows - half:
+				b[i][j] = m1[i][j + half]
+				f[i][j] = m2[i][j + half]
+
+			if i != cols - half:
+				c[i][j] = m1[i + half][j]
+				g[i][j] = m2[i + half][j]
+
+			if i != cols - half and j != rows - half:
+				d[i][j] = m1[i + half][j + half]
+				h[i][j] = m2[i + half][j + half]
 
 	# calculate p1 through p7
 	p1 = strassen(a, sub(f, h))
@@ -91,17 +86,20 @@ def strassen(m1, m2):
 	topright = add(p1, p2)
 	bottomleft = add(p3, p4)
 	bottomright = add(p5, sub(p1, add(p3, p7)))
+
+	new = [[ 333 for y in range(rows) ] for x in range(rows)] 
 	for i in range(rows):
 		for j in range(rows):
 			if i < half and j < half:
-				m1[i][j] = topleft[i][j]
+				new[i][j] = topleft[i][j]
 			elif i < half:
-				m1[i][j] = topright[i][j - half]
-			elif j < rows/2:
-				m1[i][j] = bottomleft[i - half][j]
+				new[i][j] = topright[i][j - half]
+			elif j < half:
+				new[i][j] = bottomleft[i - half][j]
 			else:
-				m1[i][j] = bottomright[i - half][j - half]
-	return m1
+				new[i][j] = bottomright[i - half][j - half]
+
+	return new
 
 # typical way of multiplying two square matrices
 def typical(m1, m2):
@@ -127,7 +125,7 @@ def typical(m1, m2):
 
 # multiply two square matrices
 def mult(m1, m2):
-	return typical(m1, m2)
+	return strassen(m1, m2)
 
 # tests for various functions
 def testing():
@@ -150,7 +148,7 @@ def testing():
 	assert (strassen([[3]],[[4]]) == [[12]]), "typ, 1x1"
 	assert (strassen([[1,2],[3,4]],[[1,2],[3,4]]) == [[7,10],[15,22]]), \
 			"typ, 2x2"
-	# assert (strassen([[1,2,3], [4,5,6], [7,8,9]], [[1,2,3], [4,5,6], \
+	#assert (strassen([[1,2,3], [4,5,6], [7,8,9]], [[1,2,3], [4,5,6], \
 	#		[7,8,9]]) == [[30,36,42],[66,81,96],[102,126,150]]), "typ, 3x3"
 
 def main():
@@ -171,25 +169,29 @@ def main():
 	m1, m2 = [[[ None for y in range(dimension) ] \
 			for x in range(dimension)] for i in range(2)]
 
-	# fill first matrix
+	'''# fill first matrix
 	for i in range(dimension):
 		for j in range(dimension):
 			m1[i][j] = int(f.readline())
 	# fill second matrix
 	for i in range(dimension):
 		for j in range(dimension):
-			m2[i][j] = int(f.readline())
+			m2[i][j] = int(f.readline()) '''
 
 	# close file
 	f.close()
 
-	m1 = gen(5)
-	m2 = gen(5)
+	m1 = gen(dimension)
+	m2 = gen(dimension)
 
 	# print result of multiplication
-	print_full(mult(m1,m2))
-	print("HEY")
-	print_full(typical(m1,m2))
+	t0 = time.clock() 
+	strassen(m1,m2)
+	print time.clock() - t0
+
+	t0 = time.clock() 
+	typical(m1,m2)
+	print time.clock() - t0
 
 	return 1
 
