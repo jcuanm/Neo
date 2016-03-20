@@ -81,23 +81,20 @@ def strassen(m1, m2):
 	p6 = strassen(sub(b, d), add(g, h))
 	p7 = strassen(sub(a, c), add(e, f))
 
-	# reconstruct matrix
-	topleft = add(p5, add(p4, sub(p6, p2)))
-	topright = add(p1, p2)
-	bottomleft = add(p3, p4)
-	bottomright = add(p5, sub(p1, add(p3, p7)))
-
+	# (manually) reconstruct matrix
 	new = [[ None for y in range(rows) ] for x in range(rows)] 
 	for i in range(rows):
 		for j in range(rows):
 			if i < half and j < half:
-				new[i][j] = topleft[i][j]
+				new[i][j] = p5[i][j] + p4[i][j] + p6[i][j] - p2[i][j]
 			elif i < half:
-				new[i][j] = topright[i][j - half]
+				new[i][j] = p1[i][j - half] + p2[i][j - half]
 			elif j < half:
-				new[i][j] = bottomleft[i - half][j]
+				new[i][j] = p3[i - half][j] + p4[i - half][j]
 			else:
-				new[i][j] = bottomright[i - half][j - half]
+				x = i - half
+				y = j - half
+				new[i][j] = p5[x][y] + p1[x][y] - p3[x][y]- p7[x][y]
 
 	return new
 
@@ -107,13 +104,21 @@ def typical(m1, m2):
 	new_row = []
 	cnt = 0
 
+	# flip m2 (for caching)
+	for i in range(len(m2)):
+		# iterating through m2's columns
+		for j in range(i, len(m2)):
+			swap = m2[i][j]
+			m2[i][j] = m2[j][i]
+			m2[j][i] = swap
+
 	# row iteration
 	for i in range(len(m1)):
 		# iterating through m2's columns
 		for j in range(len(m1)):
 			# iterating through the second matrix
 			for k in range(len(m1)):
-				cnt += m1[i][k] * m2[k][j]
+				cnt += m1[i][k] * m2[j][k]
 
 			new_row.append(cnt)
 			cnt = 0
@@ -169,20 +174,17 @@ def main():
 	m1, m2 = [[[ None for y in range(dimension) ] \
 			for x in range(dimension)] for i in range(2)]
 
-	'''# fill first matrix
+	# fill first matrix
 	for i in range(dimension):
 		for j in range(dimension):
 			m1[i][j] = int(f.readline())
 	# fill second matrix
 	for i in range(dimension):
 		for j in range(dimension):
-			m2[i][j] = int(f.readline()) '''
+			m2[i][j] = int(f.readline())
 
 	# close file
 	f.close()
-
-	m1 = gen(dimension)
-	m2 = gen(dimension)
 
 	# print result of multiplication
 	t0 = time.clock() 
@@ -190,7 +192,7 @@ def main():
 	print time.clock() - t0
 
 	t0 = time.clock() 
-	typical(m1,m2)
+	print_full(typical(m1,m2))
 	print time.clock() - t0
 
 	return 1
