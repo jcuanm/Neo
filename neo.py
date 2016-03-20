@@ -42,33 +42,33 @@ def sub(m1, m2):
 # strassen's algorithm for multiplying two square matrices
 def strassen(m1, m2):
 	rows = len(m1)
-	cols = len(m1[0])
 
-	half = int(math.ceil(float(max(rows,cols)) / 2))
+	half = int(math.ceil(float(rows) / 2))
 
-	# base case: 1x1 matrices -> 1x1 matrix
-	if rows == 1:
-		return [[m1[0][0] * m2[0][0]]]
+	# base case: crossover to typical algorithm
+	if rows <= 1:
+		return typical(m1, m2)
 
 	# create submatrices A through H 
 	a, b, c, d, e, f, g, h = [[[ 0 for y in range(half) ] \
 				for x in range(half)] for i in range(8)]
 
 	# get submatrices A through H recursively
+	x = rows - half
 	for i in range(half):
 		for j in range(half):
 			a[i][j] = m1[i][j]
 			e[i][j] = m2[i][j]
 
-			if j != rows - half:
+			if j != x:
 				b[i][j] = m1[i][j + half]
 				f[i][j] = m2[i][j + half]
 
-			if i != cols - half:
+			if i != x:
 				c[i][j] = m1[i + half][j]
 				g[i][j] = m2[i + half][j]
 
-			if i != cols - half and j != rows - half:
+			if i != x and j != x:
 				d[i][j] = m1[i + half][j + half]
 				h[i][j] = m2[i + half][j + half]
 
@@ -174,25 +174,28 @@ def main():
 	m1, m2 = [[[ None for y in range(dimension) ] \
 			for x in range(dimension)] for i in range(2)]
 
-	# fill first matrix
+	'''# fill first matrix
 	for i in range(dimension):
 		for j in range(dimension):
 			m1[i][j] = int(f.readline())
 	# fill second matrix
 	for i in range(dimension):
 		for j in range(dimension):
-			m2[i][j] = int(f.readline())
+			m2[i][j] = int(f.readline())'''
 
 	# close file
 	f.close()
 
+	m1 = gen(dimension)
+	m2 = gen(dimension)
+
 	# print result of multiplication
 	t0 = time.clock() 
-	print_full(strassen(m1,m2))
+	strassen(m1,m2)
 	print time.clock() - t0
 
 	t0 = time.clock() 
-	print_full(typical(m1,m2))
+	typical(m1,m2)
 	print time.clock() - t0
 
 	return 1
