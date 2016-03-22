@@ -50,7 +50,7 @@ def strassen(m1, m2):
 	half = int(math.ceil(float(rows) / 2))
 
 	# base case: crossover to typical algorithm
-	if rows <= 16:
+	if rows <= 32:
 		return typical(m1, m2)
 
 	# create submatrices A through H 
@@ -229,12 +229,14 @@ def main():
 
 	# print result of multiplication
 	t0 = time.clock() 
-	print_full(strassen(m1,m2))
+	a = strassen(m1,m2)
 	print ("strassen", time.clock() - t0)
 
 	t0 = time.clock() 
-	print_full(typical(m1,m2))
+	b = typical(m1,m2)
 	print ("typical", time.clock() - t0)
+
+	assert(a == b)
 
 	return 1
 
