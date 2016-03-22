@@ -197,9 +197,11 @@ def main():
 	flag = int(args[1])
 	dimension = int(args[2])
 	inputfile = args[3]
+	print(flag)
 
 	# if in testing mode, run tests, do random matrices
 	if flag == 0:
+		print("HEY")
 		# open file
 		f = open(inputfile, "r")
 
