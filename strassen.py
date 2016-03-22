@@ -198,7 +198,7 @@ def main():
 	dimension = int(args[2])
 	inputfile = args[3]
 
-	# if in testing mode, run tests, do random matrices
+	# regular
 	if flag == 0:
 		# open file
 		f = open(inputfile, "r")
@@ -220,8 +220,9 @@ def main():
 		f.close()
 
 	else:
+		# run testing
 		testing()
-
+		# generate matrices
 		m1 = gen(dimension)
 		m2 = gen(dimension)
 
