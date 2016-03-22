@@ -25,18 +25,22 @@ def gen(d):
 
 # add one square matrix to another
 def add(m1, m2):
-	new = [[ None for y in range(len(m1)) ] for x in range(len(m1))] 
+	new = []
 	for i in range(len(m1)):
+		lst = []
 		for j in range(len(m1)):
-			new[i][j] = m1[i][j] + m2[i][j]
+			lst.append(m1[i][j] + m2[i][j])
+		new.append(lst)
 	return new
 
 # subtract one square matrix from another
 def sub(m1, m2):
-	new = [[ None for y in range(len(m1)) ] for x in range(len(m1))] 
+	new = []
 	for i in range(len(m1)):
+		lst = []
 		for j in range(len(m1)):
-			new[i][j] = m1[i][j] - m2[i][j]
+			lst.append(m1[i][j] - m2[i][j])
+		new.append(lst)
 	return new
 
 # strassen's algorithm for multiplying two square matrices
@@ -46,31 +50,47 @@ def strassen(m1, m2):
 	half = int(math.ceil(float(rows) / 2))
 
 	# base case: crossover to typical algorithm
-	if rows <= 1:
+	if rows <= 16:
 		return typical(m1, m2)
 
 	# create submatrices A through H 
-	a, b, c, d, e, f, g, h = [[[ 0 for y in range(half) ] \
-				for x in range(half)] for i in range(8)]
+	a, b, c, d, e, f, g, h = [[] for i in range(8)]
 
 	# get submatrices A through H recursively
 	x = rows - half
 	for i in range(half):
+		ar, br, cr, dr, er, fr, gr, hr = [[] for l in range(8)]
 		for j in range(half):
-			a[i][j] = m1[i][j]
-			e[i][j] = m2[i][j]
-
+			ar.append(m1[i][j])
+			er.append(m2[i][j])
 			if j != x:
-				b[i][j] = m1[i][j + half]
-				f[i][j] = m2[i][j + half]
+				br.append(m1[i][j + half])
+				fr.append(m2[i][j + half])
+			else:
+				br.append(0)
+				fr.append(0)
 
 			if i != x:
-				c[i][j] = m1[i + half][j]
-				g[i][j] = m2[i + half][j]
+				cr.append(m1[i + half][j])
+				gr.append(m2[i + half][j])
+			else:
+				cr.append(0)
+				gr.append(0)
 
 			if i != x and j != x:
-				d[i][j] = m1[i + half][j + half]
-				h[i][j] = m2[i + half][j + half]
+				dr.append(m1[i + half][j + half])
+				hr.append(m2[i + half][j + half])
+			else:
+				dr.append(0)
+				hr.append(0)
+		a.append(ar)
+		b.append(br)
+		c.append(cr)
+		e.append(er)
+		f.append(fr)
+		g.append(gr)
+		d.append(dr)
+		h.append(hr)
 
 	# calculate p1 through p7
 	p1 = strassen(a, sub(f, h))
@@ -82,20 +102,22 @@ def strassen(m1, m2):
 	p7 = strassen(sub(a, c), add(e, f))
 
 	# (manually) reconstruct matrix
-	new = [[ None for y in range(rows) ] for x in range(rows)] 
+	new = []
+
 	for i in range(rows):
+		hey = []
 		for j in range(rows):
 			if i < half and j < half:
-				new[i][j] = p5[i][j] + p4[i][j] + p6[i][j] - p2[i][j]
+				hey.append(p5[i][j] + p4[i][j] + p6[i][j] - p2[i][j])
 			elif i < half:
-				new[i][j] = p1[i][j - half] + p2[i][j - half]
+				hey.append(p1[i][j - half] + p2[i][j - half])
 			elif j < half:
-				new[i][j] = p3[i - half][j] + p4[i - half][j]
+				hey.append(p3[i - half][j] + p4[i - half][j])
 			else:
 				x = i - half
 				y = j - half
-				new[i][j] = p5[x][y] + p1[x][y] - p3[x][y]- p7[x][y]
-
+				hey.append(p5[x][y] + p1[x][y] - p3[x][y]- p7[x][y])
+		new.append(hey)
 	return new
 
 # typical way of multiplying two square matrices
@@ -125,6 +147,14 @@ def typical(m1, m2):
 
 		new_matrix.append(new_row)
 		new_row = []
+
+	# flip m2 (for caching)
+	for i in range(len(m2)):
+		# iterating through m2's columns
+		for j in range(i, len(m2)):
+			swap = m2[i][j]
+			m2[i][j] = m2[j][i]
+			m2[j][i] = swap
 
 	return new_matrix
 
@@ -200,11 +230,11 @@ def main():
 	# print result of multiplication
 	t0 = time.clock() 
 	print_full(strassen(m1,m2))
-	print time.clock() - t0
+	print ("strassen", time.clock() - t0)
 
 	t0 = time.clock() 
 	print_full(typical(m1,m2))
-	print time.clock() - t0
+	print ("typical", time.clock() - t0)
 
 	return 1
 
