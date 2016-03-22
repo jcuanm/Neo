@@ -103,7 +103,6 @@ def strassen(m1, m2):
 
 	# (manually) reconstruct matrix
 	new = []
-
 	for i in range(rows):
 		hey = []
 		for j in range(rows):
@@ -141,10 +140,8 @@ def typical(m1, m2):
 			# iterating through the second matrix
 			for k in range(len(m1)):
 				cnt += m1[i][k] * m2[j][k]
-
 			new_row.append(cnt)
 			cnt = 0
-
 		new_matrix.append(new_row)
 		new_row = []
 
