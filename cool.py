@@ -191,11 +191,11 @@ def main():
 
 	# print result of multiplication
 	t0 = time.clock() 
-	strassen(m1,m2)
+	print_full(strassen(m1,m2))
 	print time.clock() - t0
 
 	t0 = time.clock() 
-	typical(m1,m2)
+	print_full(typical(m1,m2))
 	print time.clock() - t0
 
 	return 1
