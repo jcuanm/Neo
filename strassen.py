@@ -46,11 +46,10 @@ def sub(m1, m2):
 # strassen's algorithm for multiplying two square matrices
 def strassen(m1, m2):
 	rows = len(m1)
-
 	half = int(math.ceil(float(rows) / 2))
 
 	# base case: crossover to typical algorithm
-	if rows <= 32:
+	if rows <= 64:
 		return typical(m1, m2)
 
 	# create submatrices A through H 
@@ -219,6 +218,8 @@ def main():
 		# close file
 		f.close()
 
+		print_matrix(strassen(m1,m2))
+
 	else:
 		# run testing
 		testing()
@@ -226,16 +227,16 @@ def main():
 		m1 = gen(dimension)
 		m2 = gen(dimension)
 
-	# print result of multiplication
-	t0 = time.clock() 
-	a = strassen(m1,m2)
-	print ("strassen", time.clock() - t0)
+		# print result of multiplication
+		t0 = time.clock() 
+		a = strassen(m1,m2)
+		print ("strassen", time.clock() - t0)
 
-	t0 = time.clock() 
-	b = typical(m1,m2)
-	print ("typical", time.clock() - t0)
+		t0 = time.clock() 
+		b = typical(m1,m2)
+		print ("typical", time.clock() - t0)
 
-	assert(a == b)
+		assert(a == b)
 
 	return 1
 
