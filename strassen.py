@@ -3,6 +3,8 @@ import random
 import time
 import math
 
+crossover = 64
+
 # print a matrix in the traditional form
 def print_full(m):
 	for row in m:
@@ -49,7 +51,7 @@ def strassen(m1, m2):
 	half = int(math.ceil(float(rows) / 2))
 
 	# base case: crossover to typical algorithm
-	if rows <= 64:
+	if rows <= crossover:
 		return typical(m1, m2)
 
 	# create submatrices A through H 
@@ -221,6 +223,10 @@ def main():
 		print_matrix(strassen(m1,m2))
 
 	else:
+		# set crossover
+		global crossover
+		crossover = flag
+
 		# run testing
 		testing()
 		# generate matrices
