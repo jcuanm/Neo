@@ -14,7 +14,7 @@ def print_full(m):
 # print just the diagonals of a matrix
 def print_matrix(m):
 	for i in range(len(m)):
-		print str(m[i][i])
+		print (str(m[i][i]))
 	return m
 
 # generate random matrix with dimension d
