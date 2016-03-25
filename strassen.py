@@ -14,7 +14,7 @@ def print_full(m):
 # print just the diagonals of a matrix
 def print_matrix(m):
 	for i in range(len(m)):
-		print (str(m[i][i]))
+		print str(m[i][i])
 	return m
 
 # generate random matrix with dimension d
@@ -236,11 +236,12 @@ def main():
 		# print result of multiplication
 		t0 = time.clock() 
 		a = strassen(m1,m2)
-		print ("strassen", time.clock() - t0)
+		t1 = time.clock() - t0
 
 		t0 = time.clock() 
 		b = typical(m1,m2)
-		print ("typical", time.clock() - t0)
+		t2 = time.clock() - t0
+		print (crossover, t1, t2, t1/t2)
 
 		assert(a == b)
 
