@@ -105,19 +105,19 @@ def strassen(m1, m2):
 	# (manually) reconstruct matrix
 	new = []
 	for i in range(rows):
-		hey = []
+		row = []
 		for j in range(rows):
 			if i < half and j < half:
-				hey.append(p5[i][j] + p4[i][j] + p6[i][j] - p2[i][j])
+				row.append(p5[i][j] + p4[i][j] + p6[i][j] - p2[i][j])
 			elif i < half:
-				hey.append(p1[i][j - half] + p2[i][j - half])
+				row.append(p1[i][j - half] + p2[i][j - half])
 			elif j < half:
-				hey.append(p3[i - half][j] + p4[i - half][j])
+				row.append(p3[i - half][j] + p4[i - half][j])
 			else:
 				x = i - half
 				y = j - half
-				hey.append(p5[x][y] + p1[x][y] - p3[x][y]- p7[x][y])
-		new.append(hey)
+				row.append(p5[x][y] + p1[x][y] - p3[x][y]- p7[x][y])
+		new.append(row)
 	return new
 
 # typical way of multiplying two square matrices
